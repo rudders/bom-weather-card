@@ -1,12 +1,12 @@
 console.info(
-  `%c BOM-WEATHER-CARD \n%c Version 0.73b    `,
+  `%c BOM-WEATHER-CARD \n%c Version 0.79     `,
   "color: orange; font-weight: bold; background: black",
   "color: white; font-weight: bold; background: dimgray"
 );
 // #####
 // ##### Get the LitElement and HTML classes from an already defined HA Lovelace class
 // #####
-var LitElement = LitElement || Object.getPrototypeOf(customElements.get("hui-view"));
+var LitElement = LitElement || Object.getPrototypeOf(customElements.get("hui-masonry-view") || customElements.get('hui-view'));
 var html = LitElement.prototype.html;
 
 // #####
@@ -114,8 +114,10 @@ class BOMWeatherCard extends LitElement {
     var visibility = this.config.alt_visibility ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-fog"></ha-icon></span><span id="alt-visibility">${this._hass.states[this.config.alt_visibility].state}</span></li>` : this.config.entity_visibility ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-fog"></ha-icon></span><span id="visibility-text">${this.current.visibility}</span><span class="unit"> ${this.getUOM('length')}</span></li>` : ``;
     var windBearing = this.config.entity_wind_bearing ? html`<span id="wind-bearing-text">${this.current.windBearing}</span>` : ``;
     var windBearingKt = this.config.entity_wind_bearing ? html`<span id="wind-bearing-kt-text">${this.current.windBearingKt}</span>` : ``;
-    var wind = this.config.alt_wind ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span id="alt-wind">${this._hass.states[this.config.alt_wind].state}</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed && this.config.entity_wind_gust ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span id="beaufort-text">${this.current.beaufort}</span><span>${windBearing}</span><span id="wind-speed-text"> ${this.current.windSpeed}</span><span class="unit"> ${this.getUOM('length')}/h</span><span id="wind-gust-text"> (Gust ${this.current.windGust}</span><span class="unit"> ${this.getUOM('length')}/h)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span id="beaufort-text">${this.current.beaufort}</span><span>${windBearing}</span><span id="wind-speed-text"> ${this.current.windSpeed}</span><span class="unit"> ${this.getUOM('length')}/h</span></li>` : ``;
-    var wind_kt = this.config.entity_wind_bearing && this.config.entity_wind_speed_kt && this.config.entity_wind_gust_kt ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span>${windBearingKt}</span><span id="wind-speed-text-kt"> ${this.current.windSpeedKt}</span><span class="unit"> kt</span><span id="wind-gust-text-kt"> (Gust ${this.current.windGustKt}</span><span class="unit"> kt)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed_kt ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span>${windBearingKt}</span><span id="wind-speed-text-kt"> ${this.current.windSpeedKt}</span><span class="unit"> kt</span></li>` : ``;
+    var beaufortRating = this.config.entity_wind_speed ? html`<span id="beaufort-text">${this.current.beaufort}</span>` : ``;
+    var beaufortRatingKt = this.config.entity_wind_speed_kt ? html`<span id="beaufort-text-kt">${this.current.beaufortkt}</span>` : ``;
+    var wind = this.config.alt_wind ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span id="alt-wind">${this._hass.states[this.config.alt_wind].state}</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed && this.config.entity_wind_gust ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span>${beaufortRating}</span><span>${windBearing}</span><span id="wind-speed-text"> ${this.current.windSpeed}</span><span class="unit"> ${this.getUOM('length')}/h</span><span id="wind-gust-text"> (Gust ${this.current.windGust}</span><span class="unit"> ${this.getUOM('length')}/h)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span>${beaufortRating}</span><span>${windBearing}</span><span id="wind-speed-text"> ${this.current.windSpeed}</span><span class="unit"> ${this.getUOM('length')}/h</span></li>` : ``;
+    var wind_kt = this.config.entity_wind_bearing && this.config.entity_wind_speed_kt && this.config.entity_wind_gust_kt ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span>${beaufortRatingKt}</span><span>${windBearingKt}</span><span id="wind-speed-text-kt"> ${this.current.windSpeedKt}</span><span class="unit"> kt</span><span id="wind-gust-text-kt"> (Gust ${this.current.windGustKt}</span><span class="unit"> kt)</span></li>` : this.config.entity_wind_bearing && this.config.entity_wind_speed_kt ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-windy"></ha-icon></span><span>${beaufortRatingKt}</span><span>${windBearingKt}</span><span id="wind-speed-text-kt"> ${this.current.windSpeedKt}</span><span class="unit"> kt</span></li>` : ``;
     var humidity = this.config.alt_humidity ? html`<li><span class="ha-icon"><ha-icon icon="mdi:water-percent"></ha-icon></span><span id="alt-humidity">${this._hass.states[this.config.alt_humidity].state}</span></li>` : this.config.entity_humidity ? html`<li><span class="ha-icon"><ha-icon icon="mdi:water-percent"></ha-icon></span><span id="humidity-text">${this.current.humidity}</span><span class="unit"> %</span></li>` : ``;
     var pressure = this.config.alt_pressure ? html`<li><span class="ha-icon"><ha-icon icon="mdi:gauge"></ha-icon></span><span id="alt-pressure">${this._hass.states[this.config.alt_pressure].state}</span></li>` : this.config.entity_pressure ? html`<li><span class="ha-icon"><ha-icon icon="mdi:gauge"></ha-icon></span><span id="pressure-text">${this.current.pressure}</span><span class="unit"> ${this.getUOM('air_pressure')}</span></li>` : ``;
     var uv_summary = this.config.entity_uv_alert_summary ? html`<li><span class="ha-icon"><ha-icon icon="mdi:weather-sunny"></ha-icon></span>${this.localeText.uvRating} <span id="daytime-uv-text">${this._hass.states[this.config.entity_uv_alert_summary].state}</span></li>` : ``;
@@ -412,7 +414,7 @@ class BOMWeatherCard extends LitElement {
     var conditions = this._hass.states[this.config.entity_current_conditions].state;
     var humidity = this.config.entity_humidity ? this._hass.states[this.config.entity_humidity].state : 0;
     var pressure = this.config.entity_pressure ? Math.round(this._hass.states[this.config.entity_pressure].state) : 0;
-    var temperature = Math.round(this._hass.states[this.config.entity_temperature].state);
+    var temperature = !this.config.show_decimals ? Math.round(this._hass.states[this.config.entity_temperature].state) : this._hass.states[this.config.entity_temperature].state;
     var visibility = this.config.entity_visibility ? this._hass.states[this.config.entity_visibility].state : 0;
     var windBearing = this.config.entity_wind_bearing ? isNaN(this._hass.states[this.config.entity_wind_bearing].state) ? this._hass.states[this.config.entity_wind_bearing].state : this.windDirections[(Math.round((this._hass.states[this.config.entity_wind_bearing].state / 360) * 16))] : 0;
     var windBearingKt = this.config.entity_wind_bearing ? isNaN(this._hass.states[this.config.entity_wind_bearing].state) ? this._hass.states[this.config.entity_wind_bearing].state : this.windDirections[(Math.round((this._hass.states[this.config.entity_wind_bearing].state / 360) * 16))] : 0;
@@ -420,8 +422,9 @@ class BOMWeatherCard extends LitElement {
     var windGust = this.config.entity_wind_gust ? Math.round(this._hass.states[this.config.entity_wind_gust].state) : 0;
     var windSpeedKt = this.config.entity_wind_speed_kt ? Math.round(this._hass.states[this.config.entity_wind_speed_kt].state) : 0;
     var windGustKt = this.config.entity_wind_gust_kt ? Math.round(this._hass.states[this.config.entity_wind_gust_kt].state) : 0;
-    var apparent = this.config.entity_apparent_temp ? Math.round(this._hass.states[this.config.entity_apparent_temp].state) : 0;
+    var apparent = (this.config.entity_apparent_temp && !this.config.show_decimals) ? Math.round(this._hass.states[this.config.entity_apparent_temp].state) : (this.config.entity_apparent_temp && this.config.show_decimals) ? this._hass.states[this.config.entity_apparent_temp].state : 0;
     var beaufort = this.config.show_beaufort ? html`Bft: ${this.beaufortWind} - ` : ``;
+    var beaufortkt = this.config.show_beaufort ? html`Bft: ${this.beaufortWindKt} - ` : ``;
 
     return {
       'conditions': conditions,
@@ -437,6 +440,7 @@ class BOMWeatherCard extends LitElement {
       'windGustKt': windGustKt,
       'apparent' : apparent,
       'beaufort' : beaufort,
+      'beaufortkt' : beaufortkt,
     }
   }
 
@@ -483,7 +487,8 @@ get sunSet() {
 
 
 // #####
-// ##### beaufortWind - returns the wind speed on th beaufort scale
+// ##### beaufortWind - returns the wind speed on the beaufort scale
+// ##### reference https://en.wikipedia.org/wiki/Beaufort_scale
 // #####
 
 get beaufortWind() {
@@ -495,27 +500,58 @@ get beaufortWind() {
         if (this._hass.states[this.config.entity_wind_speed].state >= 55) return 10;
         if (this._hass.states[this.config.entity_wind_speed].state >= 47) return 9;
         if (this._hass.states[this.config.entity_wind_speed].state >= 39) return 8;
-        if (this._hass.states[this.config.entity_wind_speed].state >= 31) return 7;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 32) return 7;
         if (this._hass.states[this.config.entity_wind_speed].state >= 25) return 6;
-        if (this._hass.states[this.config.entity_wind_speed].state >= 18) return 5;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 19) return 5;
         if (this._hass.states[this.config.entity_wind_speed].state >= 13) return 4;
         if (this._hass.states[this.config.entity_wind_speed].state >= 8) return 3;
-        if (this._hass.states[this.config.entity_wind_speed].state >= 3) return 2;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 4) return 2;
         if (this._hass.states[this.config.entity_wind_speed].state >= 1) return 1;
-      default: // Assume m/s
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 118) return 12;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 103) return 11;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 89) return 10;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 75) return 9;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 62) return 8;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 50) return 7;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 39) return 6;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 29) return 5;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 20) return 4;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 12) return 3;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >=6) return 2;
-        if ((this._hass.states[this.config.entity_wind_speed].state * 3.6) >= 1) return 1;
+      case 'm/s':
+        if (this._hass.states[this.config.entity_wind_speed].state >= 32.7) return 12;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 28.5) return 11;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 24.5) return 10;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 20.8) return 9;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 17.2) return 8;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 13.9) return 7;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 10.8) return 6;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 8) return 5;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 5.5) return 4;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 3.4) return 3;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 1.6) return 2;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 0.5) return 1;
+      default: // Assume km/h
+        if (this._hass.states[this.config.entity_wind_speed].state >= 118) return 12;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 103) return 11;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 89) return 10;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 75) return 9;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 62) return 8;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 50) return 7;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 39) return 6;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 29) return 5;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 20) return 4;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 12) return 3;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 6) return 2;
+        if (this._hass.states[this.config.entity_wind_speed].state >= 2) return 1;
     }
+  }
+  return 0;
+}
+
+get beaufortWindKt() {
+  if (this.config.entity_wind_speed_kt) {
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 64) return 12;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 56) return 11;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 48) return 10;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 41) return 9;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 34) return 8;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 28) return 7;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 22) return 6;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 17) return 5;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 11) return 4;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 7) return 3;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 4) return 2;
+      if (this._hass.states[this.config.entity_wind_speed_kt].state >= 1) return 1;
   }
   return 0;
 }
@@ -637,6 +673,7 @@ style() {
         margin-top: ${currentTextTopMargin};
         text-align: ${currentTextAlignment};
         width: ${currentTextWidth};
+        padding-bottom: 0.2em;
       }
 
       .pop {
@@ -882,6 +919,7 @@ style() {
       if (this.config.entity_pressure && !this.config.alt_pressure) try { root.getElementById("pressure-text").textContent = `${this.current.pressure}` } catch(e) {}
       if (this.config.entity_humidity && !this.config.alt_humidity) try { root.getElementById("humidity-text").textContent = `${this.current.humidity}` } catch(e) {}
       if (this.config.show_beaufort  && !this.config.alt_wind) try { root.getElementById("beaufort-text").textContent =  `Bft: ${this.beaufortWind} - ` } catch(e) {}
+      if (this.config.show_beaufort  && !this.config.alt_wind) try { root.getElementById("beaufort-text-kt").textContent =  `Bft: ${this.beaufortWindKt} - ` } catch(e) {}
       if (this.config.entity_possible_today) try { root.getElementById("possible_today-text").textContent = `${this._hass.states[this.config.entity_possible_today].state}` } catch(e) {}
       if (this.config.entity_pos_1) try { root.getElementById("possible_tomorrow-text").textContent = `${this._hass.states[this.config.entity_pos_1].state}` } catch(e) {}
 

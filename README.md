@@ -11,7 +11,7 @@ Alternately, if you are using DarkSky (or any other provider), the important thi
 
 The BOM Weather Card provides current and forecasted weather conditions using the [BOM sensor platforms](https://www.home-assistant.io/integrations/bom/#sensor) in core Home Assistant and a custom component for BOM Forecast from [my forecast repo here](https://github.com/DavidFW1960/bom_forecast) You configure the card by passing in sensor entities from these BOM platforms. 
 
-The [weather package](https://github.com/DavidFW1960/bom_forecast/blob/master/weather.yaml) in the BOM Forecast component contains BOM Sensor platform configuration for this card as well. Both the core BOM Sensor and BOM Forecast custom component are REQUIRED to use this card.
+The [weather package](https://github.com/DavidFW1960/bom_forecast/blob/master/weather.yaml) in the BOM Forecast component contains BOM Sensor platform configuration for this card as well. Both the core BOM Sensor and BOM Forecast custom component are REQUIRED to use this card. This package is for HA versions > 0.115.0. For older versions of HA use the weather pre 0.115.x.yaml file instead. 0.115.0 deprecated listeners for entity_id's in template sensors.
 
 The card is very customizable.  You can configure many aspects of it's look and feel as well as which specific content to show by passing in customization flags and defining optional sensors.  Content can also be rearranged if desired. 
 
@@ -253,6 +253,7 @@ old_daily_format: false
 time_format: 24
 show_beaufort: true
 old_icon: "true"   # must be true in quotes for old icons to be rendered
+show_decimals: false
 ~~~~
 
 **Flags**
@@ -305,6 +306,8 @@ old_icon: "true"   # must be true in quotes for old icons to be rendered
 | slot_r4                  | **fire_summary**                   | Sets the value used in current conditions slot r4 : See slots for more info |
 | slot_r5                  | **sun_following**                  | Sets the value used in current conditions slot r4 : See slots for more info |
 | old_icon                 | **"true"** / hybrid or false       | Sets card to render old icons. Must use quotes                              |
+| show_decimals            | **false** / true                   | Sets card to render current and apparent temperature to 1 decimal place     | 
+                                                                | if true.                                                                    |
 
 **Slots**
 --------------------------
