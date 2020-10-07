@@ -8,6 +8,8 @@ console.info(
 // #####
 var LitElement = LitElement || Object.getPrototypeOf(customElements.get("hui-masonry-view") || customElements.get('hui-view'));
 var html = LitElement.prototype.html;
+// ##### for lazyload.
+const HELPERS = window.loadCardHelpers();
 
 // #####
 // ##### Custom Card Definition begins
@@ -15,6 +17,16 @@ var html = LitElement.prototype.html;
 
 class BOMWeatherCard extends LitElement {
 
+// #####
+// ##### Lazy Load Helper
+// #####
+  firstUpdated() {
+    HELPERS.then(help => {
+      if (help.importMoreInfoControl) {
+        help.importMoreInfoControl("weather");
+      }
+    })
+  }
 // #####
 // ##### Define Render Template
 // #####
